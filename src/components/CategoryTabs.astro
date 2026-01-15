@@ -1,0 +1,75 @@
+---
+/**
+ * Componente CategoryTabs
+ * Renderiza dinámicamente las pestañas de navegación
+ */
+import { MENU_CATEGORIES } from "../data/menuCategories";
+
+interface Props {
+  activeCategory?: string;
+}
+
+const { activeCategory = "bebida" } = Astro.props;
+---
+
+<nav class='menu-nav'>
+  {
+    MENU_CATEGORIES.map((category) => (
+      <button
+        class={`nav-tab ${activeCategory === category.id ? "active" : ""}`}
+        data-category={category.id}
+      >
+        {category.name.toUpperCase()}
+      </button>
+    ))
+  }
+</nav>
+
+<script>
+  // Tab Navigation
+  const tabs = document.querySelectorAll(".nav-tab");
+  const sections = document.querySelectorAll(".menu-section");
+
+  tabs.forEach((tab) => {
+    tab.addEventListener("click", () => {
+      const category = tab.dataset.category;
+
+      // Update active tab
+      tabs.forEach((t) => t.classList.remove("active"));
+      tab.classList.add("active");
+
+      // Scroll to section
+      const section = document.getElementById(category);
+      if (section) {
+        section.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    });
+  });
+
+  // Intersection Observer for active tab highlight on scroll
+  const observerOptions = {
+    root: null,
+    rootMargin: "-50% 0px -50% 0px",
+    threshold: 0,
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        const categoryId = entry.target.id;
+        tabs.forEach((tab) => {
+          if (tab.dataset.category === categoryId) {
+            tabs.forEach((t) => t.classList.remove("active"));
+            tab.classList.add("active");
+          }
+        });
+      }
+    });
+  }, observerOptions);
+
+  sections.forEach((section) => observer.observe(section));
+</script>
+
+<style is:global>
+  /* Los estilos se aplican desde global.css para mantener consistencia */
+</style>

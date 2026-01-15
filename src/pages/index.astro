@@ -1,11 +1,112 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header.astro";
+import BottomNav from "../components/BottomNav.astro";
+import CategoryTabs from "../components/CategoryTabs.astro";
+import MenuSection from "../components/MenuSection.astro";
+import { MENU_CATEGORIES } from "../data/menuCategories";
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const SHEET_URL =
+  "https://docs.google.com/spreadsheets/d/e/2PACX-1vRlVu7PhFPnUuUPPM9och_Ln5HqaPDpA9vnM3V2UYToqH0yIgFkr47-VZTDIq0GuFOpflmK9WhhTTvY/pub?output=csv";
+
+interface MenuItem {
+  seccion: string;
+  categoria: string;
+  nombre: string;
+  descripcion: string;
+  precio_1: string;
+  label_1: string;
+  precio_2?: string;
+  label_2?: string;
+}
+
+let menuItems: MenuItem[] = [];
+
+try {
+  const response = await fetch(SHEET_URL);
+  const csvData = await response.text();
+  const rows = csvData.split(/\r?\n/).filter((row) => row.trim() !== "");
+  const dataRows = rows.slice(1);
+
+  menuItems = dataRows.map((row) => {
+    const columns = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+    return {
+      // Nueva estructura del CSV: seccion,categoria,nombre,descripcion,precio_1,label_1,precio_2,label_2
+      seccion: columns[0]?.replace(/"/g, "").trim(),
+      categoria: columns[1]?.replace(/"/g, "").trim(),
+      nombre: columns[2]?.replace(/"/g, "").trim(),
+      descripcion: columns[3]?.replace(/"/g, "").trim(),
+      precio_1: columns[4]?.replace(/"/g, "").trim(),
+      label_1: columns[5]?.replace(/"/g, "").trim(),
+      precio_2: columns[6]?.replace(/"/g, "").trim(),
+      label_2: columns[7]?.replace(/"/g, "").trim(),
+    };
+  });
+
+  console.log("Productos cargados:", menuItems.length);
+  console.log("Secciones encontradas:", [
+    ...new Set(menuItems.map((item) => item.seccion)),
+  ]);
+  console.log("Categorías encontradas:", [
+    ...new Set(menuItems.map((item) => item.categoria)),
+  ]);
+  console.log("Items de ejemplo:", menuItems.slice(0, 2));
+} catch (error) {
+  console.error("Error en el fetch:", error);
+}
+
+/**
+ * Función helper para filtrar items por categoría (sección)
+ * Mapea las secciones reales (Bebidas, Comidas, Postres) con los IDs del sistema
+ */
+function getItemsByCategory(categoryId: string): MenuItem[] {
+  // Mapeo de IDs de categoría a secciones reales
+  const sectionMap: Record<string, string> = {
+    bebidas: "Bebidas",
+    comidas: "Comidas",
+    postres: "Postres",
+  };
+
+  const section = sectionMap[categoryId.toLowerCase()];
+  return menuItems.filter(
+    (item) => item.seccion?.toLowerCase() === section?.toLowerCase()
+  );
+}
 ---
 
-<Layout>
-	<Welcome />
+<Layout title='Club Social Roberts - Menú de Estación'>
+  <div class='menu-container'>
+    <Header subtitle='Menú de Estación' />
+
+    <!-- Navigation Tabs - DINÁMICAS -->
+    <CategoryTabs activeCategory='bebida' />
+
+    <!-- Hero Image -->
+    <div class='hero-image'>
+      <img
+        src='https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=800&q=80'
+        alt='Bebidas y aperitivos'
+      />
+    </div>
+
+    <!-- Menu Sections - GENERADAS DINÁMICAMENTE -->
+    <main class='menu-content'>
+      {
+        MENU_CATEGORIES.map((category) => (
+          <MenuSection
+            category={category}
+            items={getItemsByCategory(category.id)}
+          />
+        ))
+      }
+
+      <!-- Footer Note -->
+      <div class='menu-footer-note'>
+        <p>Precios sujetos a modificaciones sin previo aviso.</p>
+        <p class='footer-brand'>CLUB SOCIAL ROBERTS — SALÓN DE HONOR</p>
+      </div>
+    </main>
+
+    <BottomNav activePage='menu' />
+  </div>
 </Layout>

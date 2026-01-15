@@ -1,0 +1,163 @@
+/**
+ * Estilos globales para el sistema de menú refactorizado
+ * Estos estilos complementan los que están en MenuSection.astro y CategoryTabs.astro
+ */
+
+/* ============================================
+   CONTENEDOR PRINCIPAL DEL MENÚ
+   ============================================ */
+
+.menu-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.menu-content {
+  padding: 2rem 0;
+}
+
+/* ============================================
+   IMAGEN HERO
+   ============================================ */
+
+.hero-image {
+  width: 100%;
+  height: 300px;
+  border-radius: 12px;
+  overflow: hidden;
+  margin: 2rem 0;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.hero-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.hero-image:hover img {
+  transform: scale(1.05);
+}
+
+/* ============================================
+   FOOTER DEL MENÚ
+   ============================================ */
+
+.menu-footer-note {
+  margin-top: 4rem;
+  padding: 2rem;
+  text-align: center;
+  background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+  border-radius: 12px;
+  border-top: 3px solid #d4af37;
+}
+
+.menu-footer-note p {
+  margin: 0.5rem 0;
+  color: #666;
+  font-size: 0.95rem;
+}
+
+.menu-footer-note .footer-brand {
+  font-weight: 700;
+  color: #1a1a1a;
+  font-size: 1.1rem;
+  letter-spacing: 2px;
+  margin-top: 1rem;
+}
+
+/* ============================================
+   ANIMACIONES
+   ============================================ */
+
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 768px) {
+  .menu-container {
+    padding: 0 0.5rem;
+  }
+
+  .menu-content {
+    padding: 1rem 0;
+  }
+
+  .hero-image {
+    height: 200px;
+    margin: 1rem 0;
+  }
+
+  .menu-footer-note {
+    margin-top: 2rem;
+    padding: 1.5rem;
+  }
+
+  .menu-footer-note .footer-brand {
+    font-size: 1rem;
+  }
+}
+
+/* ============================================
+   ACCESIBILIDAD
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* ============================================
+   DARK MODE (Opcional - para futuro)
+   ============================================ */
+
+@media (prefers-color-scheme: dark) {
+  .menu-footer-note {
+    background: linear-gradient(135deg, #2a2a2a 0%, #1f1f1f 100%);
+    border-top-color: #d4af37;
+  }
+
+  .menu-footer-note p {
+    color: #ccc;
+  }
+
+  .menu-footer-note .footer-brand {
+    color: #f5f5f5;
+  }
+}

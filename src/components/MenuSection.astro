@@ -1,0 +1,260 @@
+---
+/**
+ * Componente MenuSection
+ * Renderiza dinámicamente una sección del menú con sus items agrupados por subcategoría
+ */
+import type { MenuCategory } from "../data/menuCategories";
+
+interface Props {
+  category: MenuCategory;
+  items: any[];
+}
+
+const { category, items } = Astro.props;
+
+// Agrupar items por subcategoría si existen
+let itemsBySubcategory: Record<string, any[]> = {};
+
+if (category.subcategories && category.subcategories.length > 0) {
+  // Agrupar por subcategoría
+  category.subcategories.forEach((subcat) => {
+    itemsBySubcategory[subcat.id] = [];
+  });
+
+  items.forEach((item) => {
+    // Buscar subcategoría que coincida
+    // El campo "categoria" del CSV es la subcategoría
+    const subcat = category.subcategories?.find(
+      (s) =>
+        s.id.toLowerCase() === item.categoria?.toLowerCase() ||
+        s.name.toLowerCase() === item.categoria?.toLowerCase()
+    );
+
+    if (subcat) {
+      itemsBySubcategory[subcat.id].push(item);
+    }
+  });
+} else {
+  // Sin subcategorías
+  itemsBySubcategory["default"] = items;
+}
+---
+
+<section class='menu-section' id={category.id}>
+  <h2 class='section-title'>{category.label}</h2>
+
+  {
+    category.subcategories && category.subcategories.length > 0 ? (
+      // CON SUBCATEGORÍAS
+      <div class='subcategories-container'>
+        {category.subcategories.map((subcat) => (
+          <div class='subcategory-group'>
+            <h3 class='subcategory-title'>{subcat.label || subcat.name}</h3>
+            <div class='menu-items'>
+              {itemsBySubcategory[subcat.id]?.length > 0 ? (
+                itemsBySubcategory[subcat.id].map((item) => (
+                  <div class='menu-item'>
+                    <div class='item-info'>
+                      <h4 class='item-name'>{item.nombre}</h4>
+                      {item.descripcion && (
+                        <p class='item-description'>{item.descripcion}</p>
+                      )}
+                    </div>
+                    <div class='prices-container'>
+                      {item.precio_1 && (
+                        <div class='price-option'>
+                          <span class='price-label'>{item.label_1}</span>
+                          <span class='item-price'>${item.precio_1}</span>
+                        </div>
+                      )}
+                      {item.precio_2 && (
+                        <div class='price-option'>
+                          <span class='price-label'>{item.label_2}</span>
+                          <span class='item-price'>${item.precio_2}</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <p class='empty-message'>No hay items disponibles</p>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+    ) : (
+      // SIN SUBCATEGORÍAS
+      <div class='menu-items'>
+        {items.length > 0 ? (
+          items.map((item) => (
+            <div class='menu-item'>
+              <div class='item-info'>
+                <h3 class='item-name'>{item.nombre}</h3>
+                {item.descripcion && (
+                  <p class='item-description'>{item.descripcion}</p>
+                )}
+              </div>
+              <div class='prices-container'>
+                {item.precio_1 && (
+                  <div class='price-option'>
+                    <span class='price-label'>{item.label_1}</span>
+                    <span class='item-price'>${item.precio_1}</span>
+                  </div>
+                )}
+                {item.precio_2 && (
+                  <div class='price-option'>
+                    <span class='price-label'>{item.label_2}</span>
+                    <span class='item-price'>${item.precio_2}</span>
+                  </div>
+                )}
+              </div>
+            </div>
+          ))
+        ) : (
+          <p class='empty-message'>
+            No hay {category.label.toLowerCase()} disponibles
+          </p>
+        )}
+      </div>
+    )
+  }
+</section>
+
+<style>
+  .menu-section {
+    padding: 2rem 0;
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  .section-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    color: #1a1a1a;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .subcategories-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  .subcategory-group {
+    animation: fadeIn 0.3s ease-in;
+  }
+
+  .subcategory-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 1.2rem;
+    color: #4a4a4a;
+    padding-left: 0.5rem;
+    border-left: 3px solid #d4af37;
+  }
+
+  .menu-items {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .menu-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 1rem 0;
+    border-bottom: 1px solid #f0f0f0;
+    transition: background-color 0.2s ease;
+  }
+
+  .menu-item:hover {
+    background-color: #fafafa;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    margin-left: -0.5rem;
+    margin-right: -0.5rem;
+  }
+
+  .item-info {
+    flex: 1;
+  }
+
+  .item-name {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0;
+    color: #1a1a1a;
+  }
+
+  .item-description {
+    font-size: 0.85rem;
+    color: #666;
+    margin: 0.3rem 0 0 0;
+    line-height: 1.4;
+  }
+
+  .prices-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-left: 1rem;
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  .price-option {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.2rem;
+  }
+
+  .price-label {
+    font-size: 0.75rem;
+    color: #999;
+    font-weight: 500;
+  }
+
+  .item-price {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #d4af37;
+  }
+
+  .empty-message {
+    text-align: center;
+    color: #999;
+    padding: 2rem;
+    font-style: italic;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .section-title {
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .subcategory-title {
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+    }
+
+    .menu-item {
+      padding: 0.8rem 0;
+    }
+  }
+</style>

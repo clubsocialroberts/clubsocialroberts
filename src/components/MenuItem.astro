@@ -1,0 +1,25 @@
+---
+// src/components/MenuItem.astro
+const { nombre, categoria, precio, descripcion, imagen } = Astro.props;
+---
+
+<article class="card">
+  <img src={imagen} alt={nombre} loading="lazy" />
+  <div class="content">
+    <div class="header">
+      <h3>{nombre}</h3>
+      <span class="price">${precio}</span>
+    </div>
+    <p>{descripcion}</p>
+    <span class="badge">{categoria}</span>
+  </div>
+</article>
+
+<style>
+  .card { border: 1px solid #eee; border-radius: 8px; overflow: hidden; background: white; }
+  img { width: 100%; height: 200px; object-fit: cover; }
+  .content { padding: 1rem; }
+  .header { display: flex; justify-content: space-between; align-items: center; }
+  .price { font-weight: bold; color: #e44d26; }
+  .badge { font-size: 0.8rem; background: #f0f0f0; padding: 2px 8px; border-radius: 4px; }
+</style>

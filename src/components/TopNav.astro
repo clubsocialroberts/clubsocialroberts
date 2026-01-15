@@ -1,0 +1,20 @@
+---
+interface Props {
+  activePage?: "menu" | "ubicacion" | "contacto";
+}
+
+const { activePage = "menu" } = Astro.props;
+---
+
+<nav class='menu-nav'>
+  <a href='/' class={`nav-tab ${activePage === "menu" ? "active" : ""}`}>MENÚ</a
+  >
+  <a
+    href='/ubicacion'
+    class={`nav-tab ${activePage === "ubicacion" ? "active" : ""}`}>UBICACIÓN</a
+  >
+  <a
+    href='/contacto'
+    class={`nav-tab ${activePage === "contacto" ? "active" : ""}`}>CONTACTO</a
+  >
+</nav>

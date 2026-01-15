@@ -1,0 +1,13 @@
+---
+interface Props {
+  subtitle?: string;
+}
+
+const { subtitle = "Menú de Estación" } = Astro.props;
+---
+
+<header class='menu-header'>
+  <div class='header-top'>DESDE 1945</div>
+  <h1 class='header-title'>Club Social Roberts</h1>
+  <div class='header-subtitle'>{subtitle}</div>
+</header>
