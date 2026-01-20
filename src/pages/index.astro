@@ -4,6 +4,7 @@ import Header from "../components/Header.astro";
 import BottomNav from "../components/BottomNav.astro";
 import CategoryTabs from "../components/CategoryTabs.astro";
 import MenuSection from "../components/MenuSection.astro";
+import ImageCarousel from "../components/ImageCarousel.astro";
 import { MENU_CATEGORIES } from "../data/menuCategories";
 
 const SHEET_URL =
@@ -69,24 +70,21 @@ function getItemsByCategory(categoryId: string): MenuItem[] {
 
   const section = sectionMap[categoryId.toLowerCase()];
   return menuItems.filter(
-    (item) => item.seccion?.toLowerCase() === section?.toLowerCase()
+    (item) => item.seccion?.toLowerCase() === section?.toLowerCase(),
   );
 }
 ---
 
-<Layout title='Club Social Roberts - Menú de Estación'>
+<Layout title='Club Social Roberts - Menú completo'>
   <div class='menu-container'>
-    <Header subtitle='Menú de Estación' />
+    <Header subtitle='Menú completo' />
 
     <!-- Navigation Tabs - DINÁMICAS -->
     <CategoryTabs activeCategory='bebida' />
 
-    <!-- Hero Image -->
+    <!-- Hero Carousel -->
     <div class='hero-image'>
-      <img
-        src='https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=800&q=80'
-        alt='Bebidas y aperitivos'
-      />
+      <ImageCarousel />
     </div>
 
     <!-- Menu Sections - GENERADAS DINÁMICAMENTE -->

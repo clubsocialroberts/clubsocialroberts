@@ -42,6 +42,7 @@ export const MENU_CATEGORIES: MenuCategory[] = [
       { id: "hamburguesas", name: "Hamburguesas", label: "🍔 Hamburguesas" },
       { id: "milanesas", name: "Milanesas", label: "🥩 Milanesas" },
       { id: "lomitos", name: "Lomitos", label: "🥪 Lomitos" },
+      { id: "empanadas", name: "Empanadas", label: "🥟 Empanadas" },
       { id: "tostados", name: "Tostados", label: "🍞 Tostados" },
       { id: "menu-infantil", name: "Menu Infantil", label: "👶 Menu Infantil" },
       { id: "pizzas", name: "Pizzas", label: "🍕 Pizzas" },
@@ -63,7 +64,7 @@ export const MENU_CATEGORIES: MenuCategory[] = [
  */
 export function getCategoryById(id: string): MenuCategory | undefined {
   return MENU_CATEGORIES.find(
-    (cat) => cat.id.toLowerCase() === id.toLowerCase()
+    (cat) => cat.id.toLowerCase() === id.toLowerCase(),
   );
 }
 
