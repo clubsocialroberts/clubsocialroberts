@@ -44,7 +44,6 @@ export const MENU_CATEGORIES: MenuCategory[] = [
       { id: "lomitos", name: "Lomitos", label: "🥪 Lomitos" },
       { id: "empanadas", name: "Empanadas", label: "🥟 Empanadas" },
       { id: "tostados", name: "Tostados", label: "🍞 Tostados" },
-      { id: "menu-infantil", name: "Menu Infantil", label: "👶 Menu Infantil" },
       { id: "pizzas", name: "Pizzas", label: "🍕 Pizzas" },
       { id: "papas-fritas", name: "Papas Fritas", label: "🍟 Papas Fritas" },
       { id: "picadas", name: "Picadas", label: "🍽️ Picadas" },
